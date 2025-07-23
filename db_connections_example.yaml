@@ -1,0 +1,24 @@
+dbconnector-mariadb:
+  type: mariadb
+  host: 127.0.0.1
+  port: 3306
+  database: dbname
+  user: user
+  password: password
+
+dbconnector-postgresql:
+  type: postgres
+  host: 127.0.0.1
+  port: 5432
+  database: dbname
+  user: user
+  password: password
+
+dbconnector-sqlserver:
+  type: sqlserver
+  driver: ODBC Driver 17 for SQL Server
+  host: 127.0.0.1
+  port: 1433
+  database: dbname
+  user: user
+  password: password

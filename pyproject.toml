@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dbconnector"
+version = "0.1.0"
+description = "Unified connector for PostgreSQL, MariaDB and SQL Server using alias-based config."
+authors = [
+    { name = "ZenThosLab", email = "zenthos.lab@gmail.com" }
+]
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.8"
+
+dependencies = [
+    "PyYAML>=6.0",
+    "mariadb>=1.1.13",
+    "psycopg2-binary>=2.9.10",
+    "pyodbc>=5.2.0",
+    "packaging>=25.0"
+]
+
+[tool.setuptools]
+packages = ["dbconnector"]
+include-package-data = true
