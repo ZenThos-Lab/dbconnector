@@ -3,7 +3,7 @@
 # Third-party imports
 
 # Project-specific imports
-from ..config.loader import load_config
+from ..config.loader import ConfigLoader
 from .base import BaseConnector
 from .mariadb_connector import MariaDBConnector
 from .postgresql_connector import PostgreSQLConnector
@@ -18,11 +18,33 @@ CONNECTORS = {
 
 
 class ConnectorFactory:
+    """
+    Factory class for managing database connections.
+
+    This class provides a unified interface to create an manage connections to
+    different types of databases based on a given configuration.
+    """
 
     _connections = {}
 
     @classmethod
     def get_connection(cls, alias: str):
+        """
+        Retrieves a database connection for the given alias.
+
+        If the connection already exists for the alias, it is reused.
+        Otherwise, a new connection is established and cached.
+
+        Args:
+            alias (str): The key in the configuration file that indentifies
+            a database connection.
+
+        Returns:
+            Any: An active database connection instance.
+
+        Raises:
+            KeyError: If the alias is not found in the configuration.
+        """
         if alias in cls._connections:
             return cls._connections[alias]
 
@@ -35,7 +57,20 @@ class ConnectorFactory:
 
     @classmethod
     def _get_db_config(cls, alias: str) -> dict:
-        config = load_config()
+        """
+        Loads the configuration dictionary for the given alias.
+
+        Args:
+            alias (str): The key in the configuration file that indentifies
+            a database connection.
+
+        Returns:
+            dict: A dictionary with the database connection parameters.
+
+        Raises:
+            KeyError: If the alias is not found in the configuration file.
+        """
+        config = ConfigLoader().load()
         if alias not in config:
             raise KeyError(f"Configuration for alias:{alias} not found")
 
@@ -43,6 +78,20 @@ class ConnectorFactory:
 
     @classmethod
     def _get_connector(cls, config: dict) -> BaseConnector:
+        """
+        Selects and initializes the appropriate connector based on the database
+        type.
+
+        Args:
+            config (dict): A dictionary containing the database connection
+            parameters.
+
+        Returns:
+            BaseConnector: An instance of the selected connector.
+
+        Raises:
+            KeyError: If the database type is not supported.
+        """
         db_type = config["type"]
 
         if db_type not in CONNECTORS:
@@ -52,6 +101,15 @@ class ConnectorFactory:
 
     @staticmethod
     def _is_connection_valid(connection) -> bool:
+        """
+        Verifies if a given database connection is valid.
+
+        Args:
+            connection (Any): A database connection instance.
+
+        Returns:
+            bool: True if the connection is valid, False otherwise
+        """
         try:
             connection.cursor()
             return True
@@ -60,6 +118,13 @@ class ConnectorFactory:
 
     @classmethod
     def close(cls, alias: str):
+        """
+        Closes and removes the cached connection for the given alias.
+
+        Args:
+            alias (str): The key in the configuration file that indentifies
+            a database connection.
+        """
         if alias in cls._connections:
             try:
                 cls._connections[alias].close()
@@ -71,7 +136,7 @@ class ConnectorFactory:
     @classmethod
     def close_all(cls):
         """
-        Closes all connections in the factory
+        Closes and removes all cached connections managed by the factory.
         """
         for alias, connection in list(cls._connections.items()):
             try:

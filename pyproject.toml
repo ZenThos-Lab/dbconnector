@@ -22,5 +22,7 @@ dependencies = [
 ]
 
 [tool.setuptools]
-packages = ["dbconnector"]
 include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["dbconnector"]

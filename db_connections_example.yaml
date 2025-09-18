@@ -7,7 +7,7 @@ dbconnector-mariadb:
   password: password
 
 dbconnector-postgresql:
-  type: postgres
+  type: postgresql
   host: 127.0.0.1
   port: 5432
   database: dbname
@@ -16,9 +16,10 @@ dbconnector-postgresql:
 
 dbconnector-sqlserver:
   type: sqlserver
-  driver: ODBC Driver 17 for SQL Server
+  driver: ODBC Driver 18 for SQL Server
   host: 127.0.0.1
   port: 1433
   database: dbname
   user: user
-  password: password
+  password: TuPasswordSegura1!
+  trust_server_certificate: 'Yes'

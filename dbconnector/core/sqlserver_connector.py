@@ -9,10 +9,15 @@ from .base import BaseConnector
 
 class SQLServerConnector(BaseConnector):
     def connect(self):
+        trust_server_certificate = str(
+            self.config.get('trust_server_certificate', 'Yes')
+        )
+
         return pyodbc.connect(
             f"DRIVER={{{self.config['driver']}}};"
             f"SERVER={self.config['host']},{self.config['port']};"
             f"DATABASE={self.config['database']};"
             f"UID={self.config['user']};"
             f"PWD={self.config['password']};"
+            f"TrustServerCertificate={trust_server_certificate};"
         )

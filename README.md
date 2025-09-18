@@ -68,14 +68,20 @@ from dbconnector import ConnectorManager
 
 # Get a connection
 conn = ConnectorManager.get_connection("my_postgres")
+# conn = ConnectorManager.get_connection("my_mariadb")
+# conn = ConnectorManager.get_connection("my_sqlserver")
 
 # Use the connection...
 cursor = conn.cursor()
-cursor.execute("SELECT * FROM users;")
+cursor.execute("SELECT * FROM example LIMIT 1;")
+# cursor.execute("SELECT * FROM example LIMIT 1;")
+# cursor.execute("SELECT TOP 1 * FROM example;")
 rows = cursor.fetchall()
 
 # Close a specific connection
 ConnectorManager.close("my_postgres")
+# ConnectorManager.close("my_mariadb")
+# ConnectorManager.close("my_sqlserver")
 
 # Or close all connections
 ConnectorManager.close_all()
