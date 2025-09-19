@@ -26,6 +26,10 @@ Source = "https://github.com/ZenThos-Lab/dbconnector"
 [tool.setuptools.package-dir]
 dbconnector = "dbconnector/dbconnector"
 
-[tool.setuptools.packages.find]
-where = ["dbconnector"]
-include = ["dbconnector*"]
+[tool.setuptools]
+packages = [
+  "dbconnector",
+  "dbconnector.core",
+  "dbconnector.connectors",
+  "dbconnector.config",
+]
