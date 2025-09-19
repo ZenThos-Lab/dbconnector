@@ -1,4 +1,6 @@
 # Python imports
+import os
+
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -6,12 +8,21 @@ from typing import Any, Dict, Optional
 import yaml
 
 # Project-specific imports
-from .constants import REQUIRED_FIELDS
+from ..connectors import get_connector_class
 
 
 class ConfigLoader:
-    def __init__(self, path: Optional[str] = None):
-        self._path = Path(path or "db_connections.yaml")
+    def __init__(self):
+        db_connections_path = os.getenv("DB_CONNECTIONS_PATH")
+        if not db_connections_path:
+            raise EnvironmentError(
+                "Environment variable DB_CONNECTIONS_PATH not set. "
+                "Please create a environment variable named "
+                "DB_CONNECTIONS_PATH and set it to the path to your "
+                "db_connections.yaml file."
+            )
+
+        self._path = Path(db_connections_path)
         self._config: Optional[Dict[str, Dict[str, Any]]] = None
 
     def load(self) -> Dict[str, Dict[str, Any]]:
@@ -52,15 +63,10 @@ class ConfigLoader:
                 )
 
             db_type = params.get("type")
-            if db_type not in REQUIRED_FIELDS:
-                raise KeyError(
-                    f"Connector for db_type:{db_type} not found "
-                    f"(alias:{alias})"
-                )
-
-            required_fields = REQUIRED_FIELDS[db_type]
+            connector_cls = get_connector_class(db_type)
+            required = connector_cls.required_fields()
             missing_fields = [
-                key for key in required_fields.keys() if key not in params
+                key for key in required.keys() if key not in params
             ]
             if missing_fields:
                 raise KeyError(

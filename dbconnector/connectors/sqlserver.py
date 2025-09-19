@@ -8,6 +8,20 @@ from .base import BaseConnector
 
 
 class SQLServerConnector(BaseConnector):
+    TYPE = "sqlserver"
+
+    @classmethod
+    def required_fields(cls):
+        return {
+            "driver": str,
+            "host": str,
+            "port": int,
+            "database": str,
+            "user": str,
+            "password": str,
+            "trust_server_certificate": str,
+        }
+
     def connect(self):
         trust_server_certificate = str(
             self.config.get('trust_server_certificate', 'Yes')

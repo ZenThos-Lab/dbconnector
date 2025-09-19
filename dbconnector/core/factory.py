@@ -1,20 +1,12 @@
 # Python imports
+from typing import Any, Dict
 
 # Third-party imports
 
 # Project-specific imports
 from ..config.loader import ConfigLoader
-from .base import BaseConnector
-from .mariadb_connector import MariaDBConnector
-from .postgresql_connector import PostgreSQLConnector
-from .sqlserver_connector import SQLServerConnector
-
-
-CONNECTORS = {
-    "postgresql": PostgreSQLConnector,
-    "mariadb": MariaDBConnector,
-    "sqlserver": SQLServerConnector,
-}
+from ..connectors import get_connector_class
+from ..connectors.base import BaseConnector
 
 
 class ConnectorFactory:
@@ -25,7 +17,7 @@ class ConnectorFactory:
     different types of databases based on a given configuration.
     """
 
-    _connections = {}
+    _connections: Dict[str, Any] = {}
 
     @classmethod
     def get_connection(cls, alias: str):
@@ -49,10 +41,13 @@ class ConnectorFactory:
             return cls._connections[alias]
 
         config = cls._get_db_config(alias)
-        connector = cls._get_connector(config)
+        db_type = config["type"]
+
+        connector_cls = get_connector_class(db_type)
+        connector: BaseConnector = connector_cls(config)
+
         connection = connector.connect()
         cls._connections[alias] = connection
-
         return connection
 
     @classmethod
@@ -75,46 +70,6 @@ class ConnectorFactory:
             raise KeyError(f"Configuration for alias:{alias} not found")
 
         return config[alias]
-
-    @classmethod
-    def _get_connector(cls, config: dict) -> BaseConnector:
-        """
-        Selects and initializes the appropriate connector based on the database
-        type.
-
-        Args:
-            config (dict): A dictionary containing the database connection
-            parameters.
-
-        Returns:
-            BaseConnector: An instance of the selected connector.
-
-        Raises:
-            KeyError: If the database type is not supported.
-        """
-        db_type = config["type"]
-
-        if db_type not in CONNECTORS:
-            raise KeyError(f"Connector for db_type:{db_type} not found")
-
-        return CONNECTORS[db_type](config)
-
-    @staticmethod
-    def _is_connection_valid(connection) -> bool:
-        """
-        Verifies if a given database connection is valid.
-
-        Args:
-            connection (Any): A database connection instance.
-
-        Returns:
-            bool: True if the connection is valid, False otherwise
-        """
-        try:
-            connection.cursor()
-            return True
-        except Exception:
-            return False
 
     @classmethod
     def close(cls, alias: str):
