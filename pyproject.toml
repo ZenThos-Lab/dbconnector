@@ -11,8 +11,7 @@ requires-python = ">=3.9"
 authors = [{ name = "ZenThos-Lab", email = "zenthos.lab@gmail.com" }]
 dependencies = [
   "pyodbc>=5.2.0",
-  "PyYAML>=6.0.2",
-  "packaging>=25.0"
+  "PyYAML>=6.0.2"
 ]
 classifiers = [
   "Programming Language :: Python :: 3",
