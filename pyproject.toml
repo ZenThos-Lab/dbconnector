@@ -23,9 +23,9 @@ classifiers = [
 Homepage = "https://github.com/ZenThos-Lab/dbconnector"
 Source = "https://github.com/ZenThos-Lab/dbconnector"
 
-# Clave: tu paquete real vive dentro de la carpeta 'dbconnector' (externa)
-[tool.setuptools.packages.find]
-where = ["dbconnector"]        # busca paquetes dentro de ./dbconnector
-
 [tool.setuptools.package-dir]
-"" = "dbconnector"             # mapea paquete raíz a ./dbconnector
+dbconnector = "dbconnector/dbconnector"
+
+[tool.setuptools.packages.find]
+where = ["dbconnector"]
+include = ["dbconnector*"]
