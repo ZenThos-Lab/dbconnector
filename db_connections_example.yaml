@@ -1,9 +1,0 @@
-dbconnector-sqlserver:
-  type: sqlserver
-  driver: ODBC Driver 18 for SQL Server
-  host: 127.0.0.1
-  port: 1433
-  database: dbname
-  user: user
-  password: TuPasswordSegura1!
-  trust_server_certificate: 'Yes'

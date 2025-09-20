@@ -1,4 +1,3 @@
-# setup.py
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_py import build_py as _build_py
 from Cython.Build import cythonize
@@ -23,8 +22,6 @@ ext_modules = cythonize(
 # 3) Evitar que setuptools copie los .py al wheel
 class build_py_no_sources(_build_py):
     def find_package_modules(self, package, package_dir):
-        # No retornamos módulos puros (.py);
-        # ya existen como extensiones compiladas
         return []
 
 
