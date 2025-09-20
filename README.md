@@ -10,7 +10,7 @@ En su versión actual soporta **SQL Server** (vía `pyodbc`) y está diseñado p
 ## 📦 Instalación
 
 ```bash
-pip install "dbconnector @ git+https://github.com/ZenThosLab/dbconnector.git@main"
+pip install --no-cache-dir "git+https://github.com/ZenThos-Lab/dbconnector.git@main"
 ```
 
 > Requisitos: Python **3.9+** y el **driver ODBC** de SQL Server instalado en tu sistema (por ejemplo, *ODBC Driver 18 for SQL Server*).
